@@ -1,18 +1,36 @@
-@extends('layouts.backend')
+@extends('layouts.admin')
 
 @section('content')
-    <div class="container">
+    <div class="section-body">
         <div class="row">
-            @include('admin.sidebar')
-
-            <div class="col-md-9">
+            <div class="col-12 col-md-6 col-lg-12">
                 <div class="card">
-                    <div class="card-header">%%crudNameCap%%</div>
+                    @if(session('flash_message'))
+                    <div class="alert alert-success alert-dismissible show fade col-lg-3" style="position: absolute; right: 15px; top: 15px">
+                        <div class="alert-body">
+                            <button class="close" data-dismiss="alert">
+                                <span>&times;</span>
+                            </button>
+                            {{ session('flash_message') }}
+                        </div>
+                    </div>
+                    @endif
                     <div class="card-body">
-                        <a href="{{ url('/%%routeGroup%%%%viewName%%/create') }}" class="btn btn-success btn-sm" title="Add New %%modelName%%">
-                            <i class="fa fa-plus" aria-hidden="true"></i> Add New
-                        </a>
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb ">
+                                <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
+                                <li class="breadcrumb-item active">%%modelName%%</li>
+                            </ol>
+                        </nav>
+                    </div>
+                    <div class="card-header">
+                        <h4> %%crudNameCap%% </h4>
+                        <div class="card-header-form">
+                            <a href="{{ url('/%%routeGroup%%%%viewName%%/create') }}" class="btn btn-icon icon-left btn-primary"><i class="fas fa-plus"></i>Add new</a>
+                        </div>
+                    </div>
 
+                    <div class="card-body">
                         <form method="GET" action="{{ url('/%%routeGroup%%%%viewName%%') }}" accept-charset="UTF-8" class="form-inline my-2 my-lg-0 float-right" role="search">
                             <div class="input-group">
                                 <input type="text" class="form-control" name="search" placeholder="Search..." value="{{ request('search') }}">
@@ -23,9 +41,6 @@
                                 </span>
                             </div>
                         </form>
-
-                        <br/>
-                        <br/>
                         <div class="table-responsive">
                             <table class="table">
                                 <thead>
@@ -39,20 +54,20 @@
                                         <td>{{ $loop->iteration or $item->%%primaryKey%% }}</td>
                                         %%formBodyHtml%%
                                         <td>
-                                            <a href="{{ url('/%%routeGroup%%%%viewName%%/' . $item->%%primaryKey%%) }}" title="View %%modelName%%"><button class="btn btn-info btn-xs"><i class="fa fa-eye" aria-hidden="true"></i></button></a>
-                                            <a href="{{ url('/%%routeGroup%%%%viewName%%/' . $item->%%primaryKey%% . '/edit') }}" title="Edit %%modelName%%"><button class="btn btn-primary btn-xs"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>
+                                            <a class="btn btn-icon btn-primary" href="{{ url('/%%routeGroup%%%%viewName%%/' . $item->%%primaryKey%%) }}" title="View %%modelName%%"><i class="fas fa-eye"></i></a>
+                                            <a class="btn btn-icon btn-info" href="{{ url('/%%routeGroup%%%%viewName%%/' . $item->%%primaryKey%% . '/edit') }}" title="Edit %%modelName%%"><i class="far fa-edit"></i></a>
 
                                             <form method="POST" action="{{ url('/%%routeGroup%%%%viewName%%' . '/' . $item->%%primaryKey%%) }}" accept-charset="UTF-8" style="display:inline">
-                                                {{ method_field('DELETE') }}
-                                                {{ csrf_field() }}
-                                                <button type="submit" class="btn btn-danger btn-xs" title="Delete %%modelName%%" onclick="return confirm(&quot;Confirm delete?&quot;)"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+                                                @method('DELETE')
+                                                @csrf
+                                                <button type="submit" class="btn btn-danger btn-icon" title="Delete %%modelName%%" onclick="return confirm(&quot;Confirm delete?&quot;)"><i class="fas fa-trash-alt" aria-hidden="true"></i></button>
                                             </form>
                                         </td>
                                     </tr>
                                 @endforeach
                                 </tbody>
                             </table>
-                            <div class="pagination-wrapper"> {!! $%%crudName%%->appends(['search' => Request::get('search')])->render() !!} </div>
+                            <div class="pagination-wrapper"> {{ $%%crudName%%->links() }} </div>
                         </div>
 
                     </div>

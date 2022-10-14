@@ -1,17 +1,35 @@
-@extends('layouts.backend')
+@extends('layouts.admin')
 
 @section('content')
-    <div class="container">
+    <div class="section-body">
         <div class="row">
-            @include('admin.sidebar')
-
-            <div class="col-md-9">
+            <div class="col-12 col-md-6 col-lg-12">
                 <div class="card">
-                    <div class="card-header">Settings</div>
+                    @if(session('flash_message'))
+                        <div class="alert alert-success alert-dismissible show fade col-lg-3" style="position: absolute; right: 15px; top: 15px">
+                            <div class="alert-body">
+                                <button class="close" data-dismiss="alert">
+                                    <span>&times;</span>
+                                </button>
+                                {{ session('flash_message') }}
+                            </div>
+                        </div>
+                    @endif
                     <div class="card-body">
-                        <a href="{{ url('/admin/settings/create') }}" class="btn btn-success btn-sm" title="Add New Setting">
-                            <i class="fa fa-plus" aria-hidden="true"></i> Add New
-                        </a>
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb ">
+                                <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
+                                <li class="breadcrumb-item active">Settings</li>
+                            </ol>
+                        </nav>
+                    </div>
+                    <div class="card-header">
+                        <h4> Settings </h4>
+                        <div class="card-header-form">
+                            <a href="{{ url('/admin/settings/create') }}" class="btn btn-icon icon-left btn-primary"><i class="fas fa-plus"></i>Add new</a>
+                        </div>
+                    </div>
+                    <div class="card-body">
 
                         {!! Form::open(['method' => 'GET', 'url' => '/admin/settings', 'class' => 'form-inline my-2 my-lg-0 float-right', 'role' => 'search'])  !!}
                         <div class="input-group">
@@ -24,8 +42,6 @@
                         </div>
                         {!! Form::close() !!}
 
-                        <br/>
-                        <br/>
                         <div class="table-responsive">
                             <table class="table table-borderless">
                                 <thead>
@@ -40,26 +56,20 @@
                                         <td>{{ $item->value }}</td>
                                         <td><code>setting('{{ $item->key }}')</code></td>
                                         <td>
-                                            <a href="{{ url('/admin/settings/' . $item->id) }}" title="View Setting"><button class="btn btn-info btn-sm"><i class="fa fa-eye" aria-hidden="true"></i></button></a>
-                                            <a href="{{ url('/admin/settings/' . $item->id . '/edit') }}" title="Edit Setting"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>
-                                            {!! Form::open([
-                                                'method' => 'DELETE',
-                                                'url' => ['/admin/settings', $item->id],
-                                                'style' => 'display:inline'
-                                            ]) !!}
-                                                {!! Form::button('<i class="fa fa-trash-o" aria-hidden="true"></i>', array(
-                                                        'type' => 'submit',
-                                                        'class' => 'btn btn-danger btn-sm',
-                                                        'title' => 'Delete Setting',
-                                                        'onclick'=>'return confirm("Confirm delete?")'
-                                                )) !!}
-                                            {!! Form::close() !!}
+                                            <a class="btn btn-icon btn-primary" href="{{ url('/admin/settings/' . $item->id) }}" title="View %%modelName%%"><i class="fas fa-eye"></i></a>
+                                            <a class="btn btn-icon btn-info" href="{{ url('/admin/settings/' . $item->id . '/edit') }}" title="Edit %%modelName%%"><i class="far fa-edit"></i></a>
+
+                                            <form method="POST" action="{{ url('/admin/settings', $item->id) }}" accept-charset="UTF-8" style="display:inline">
+                                                @method('DELETE')
+                                                @csrf
+                                                <button type="submit" class="btn btn-danger btn-icon" title="Delete %%modelName%%" onclick="return confirm(&quot;Confirm delete?&quot;)"><i class="fas fa-trash-alt" aria-hidden="true"></i></button>
+                                            </form>
                                         </td>
                                     </tr>
                                 @endforeach
                                 </tbody>
                             </table>
-                            <div class="pagination-wrapper"> {!! $settings->appends(['search' => Request::get('search')])->render() !!} </div>
+                            <div class="pagination-wrapper"> {{ $settings->links() }} </div>
                         </div>
 
                     </div>

@@ -1,10 +1,8 @@
-@extends('layouts.backend')
+@extends('layouts.admin')
 
 @section('content')
-    <div class="container">
+    <div class="section-body">
         <div class="row">
-            @include('admin.sidebar')
-
             <div class="col-md-9">
                 <div class="card">
                     <div class="card-header">Edit Setting #{{ $setting->id }}</div>

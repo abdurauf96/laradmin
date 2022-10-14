@@ -36,10 +36,7 @@ class UsersController extends Controller
      */
     public function create()
     {
-        $roles = Role::select('id', 'name', 'label')->get();
-        $roles = $roles->pluck('label', 'name');
-
-        return view('admin.users.create', compact('roles'));
+        return view('admin.users.create');
     }
 
     /**
@@ -57,17 +54,12 @@ class UsersController extends Controller
                 'name' => 'required',
                 'email' => 'required|string|max:255|email|unique:users',
                 'password' => 'required',
-                'roles' => 'required'
             ]
         );
 
         $data = $request->except('password');
         $data['password'] = bcrypt($request->password);
         $user = User::create($data);
-
-        foreach ($request->roles as $role) {
-            $user->assignRole($role);
-        }
 
         return redirect('admin/users')->with('flash_message', 'User added!');
     }
@@ -95,16 +87,8 @@ class UsersController extends Controller
      */
     public function edit($id)
     {
-        $roles = Role::select('id', 'name', 'label')->get();
-        $roles = $roles->pluck('label', 'name');
-
-        $user = User::with('roles')->select('id', 'name', 'email')->findOrFail($id);
-        $user_roles = [];
-        foreach ($user->roles as $role) {
-            $user_roles[] = $role->name;
-        }
-
-        return view('admin.users.edit', compact('user', 'roles', 'user_roles'));
+        $user = User::findOrFail($id);
+        return view('admin.users.edit', compact('user'));
     }
 
     /**
@@ -122,7 +106,6 @@ class UsersController extends Controller
             [
                 'name' => 'required',
                 'email' => 'required|string|max:255|email|unique:users,email,' . $id,
-                'roles' => 'required'
             ]
         );
 
@@ -133,11 +116,6 @@ class UsersController extends Controller
 
         $user = User::findOrFail($id);
         $user->update($data);
-
-        $user->roles()->detach();
-        foreach ($request->roles as $role) {
-            $user->assignRole($role);
-        }
 
         return redirect('admin/users')->with('flash_message', 'User updated!');
     }

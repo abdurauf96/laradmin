@@ -1,17 +1,26 @@
-@extends('layouts.backend')
+@extends('layouts.admin')
 
 @section('content')
-    <div class="container">
+    <div class="section-body">
         <div class="row">
-            @include('admin.sidebar')
-
-            <div class="col-md-9">
+            <div class="col-12 col-md-6 col-lg-12">
                 <div class="card">
-                    <div class="card-header">Edit User</div>
                     <div class="card-body">
-                        <a href="{{ url('/admin/users') }}" title="Back"><button class="btn btn-warning btn-sm"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back</button></a>
-                        <br />
-                        <br />
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb ">
+                                <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
+                                <li class="breadcrumb-item "><a href="{{ url('/admin/users') }}">User</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Edit</li>
+                            </ol>
+                        </nav>
+                    </div>
+                    <div class="card-header">
+                        <h4> Edit User #{{ $user->id }} </h4>
+                        <div class="card-header-form">
+                            <a href="{{ url('/admin/users') }}" title="Back"><button class="btn btn-warning btn-sm"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back</button></a>
+                        </div>
+                    </div>
+                    <div class="card-body">
 
                         @if ($errors->any())
                             <ul class="alert alert-danger">
@@ -21,15 +30,13 @@
                             </ul>
                         @endif
 
-                        {!! Form::model($user, [
-                            'method' => 'PATCH',
-                            'url' => ['/admin/users', $user->id],
-                            'class' => 'form-horizontal'
-                        ]) !!}
+                        <form method="POST" action="{{ url('/admin/users/' . $user->id) }}" accept-charset="UTF-8" class="form-horizontal" enctype="multipart/form-data">
+                            {{ method_field('PATCH') }}
+                            {{ csrf_field() }}
 
-                        @include ('admin.users.form', ['formMode' => 'edit'])
+                            @include ('admin.users.form', ['formMode' => 'edit'])
 
-                        {!! Form::close() !!}
+                        </form>
 
                     </div>
                 </div>
