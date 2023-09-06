@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d8e8a6aa4573bfd79de559fef25290b2",
+    "content-hash": "1acc5de1406fbfed89201bd3f09a0964",
     "packages": [
         {
             "name": "appzcoder/crud-generator",
@@ -8380,7 +8380,7 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": "^7.3|^8.0.2"
+        "php": "^7.3|^8.1"
     },
     "platform-dev": [],
     "plugin-api-version": "2.3.0"
