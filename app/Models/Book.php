@@ -3,20 +3,22 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Post extends Model
+class Book extends Model
 {
-    use LogsActivity, SoftDeletes;
+    use LogsActivity;
+    use SoftDeletes;
+
 
     /**
      * The database table used by the model.
      *
      * @var string
      */
-    protected $table = 'posts';
+    protected $table = 'books';
 
     /**
     * The database primary key value.
@@ -30,7 +32,9 @@ class Post extends Model
      *
      * @var array
      */
-    protected $fillable = ['title', 'description', 'body'];
+    protected $fillable = ['title', 'description', 'author', 'year', 'publisher', 'pages'];
+
+
 
     /**
      * Change activity log event description
