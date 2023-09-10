@@ -2,11 +2,10 @@
 
 use App\Http\Controllers\Admin\ActivityLogsController;
 use App\Http\Controllers\Admin\AdminController;
-use App\Http\Controllers\Admin\BooksController;
-use App\Http\Controllers\Admin\PostsController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\UsersController;
 use Illuminate\Support\Facades\Route;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -26,8 +25,6 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function() {
 
     Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
     Route::resource('users', UsersController::class);
-    Route::resource('/posts', PostsController::class);
-    Route::resource('/books', BooksController::class);
 
     Route::resource('activitylogs', ActivityLogsController::class)->only(['index', 'show', 'destroy']);
     Route::resource('settings', SettingsController::class);
