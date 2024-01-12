@@ -1,6 +1,11 @@
 <?php
 
+use App\Http\Controllers\Admin\ActivityLogsController;
+use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\SettingsController;
+use App\Http\Controllers\Admin\UsersController;
 use Illuminate\Support\Facades\Route;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -16,22 +21,17 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function(){
+Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function() {
 
-    Route::get('/dashboard', function () {
-        return view('admin.dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
+    Route::resource('users', UsersController::class);
 
-    Route::get('/', 'App\Http\Controllers\Admin\AdminController@index');
-    Route::resource('users', 'App\Http\Controllers\Admin\UsersController');
-    Route::resource('activitylogs', 'App\Http\Controllers\Admin\ActivityLogsController')->only([
-        'index', 'show', 'destroy'
-    ]);
-    Route::resource('settings', 'App\Http\Controllers\Admin\SettingsController');
+    Route::resource('activitylogs', ActivityLogsController::class)->only(['index', 'show', 'destroy']);
+    Route::resource('settings', SettingsController::class);
+
     Route::get('generator', ['uses' => '\Appzcoder\LaravelAdmin\Controllers\ProcessController@getGenerator'])->name('generator');
     Route::post('generator', ['uses' => '\Appzcoder\LaravelAdmin\Controllers\ProcessController@postGenerator']);
 
 });
 
 require __DIR__.'/auth.php';
-
